@@ -23,14 +23,14 @@ os.system("cp ./quick-ssh /usr/local/lib/quick-ssh/")
 print("ln -s /usr/local/lib/quick-ssh/quick-ssh /usr/local/bin/")
 os.system("ln -s /usr/local/lib/quick-ssh/quick-ssh /usr/local/bin/")
 
-if not os.path.exists("~/quick-ssh-config.json"):
+if not os.path.isfile(f"{os.path.expanduser('~')}/quick-ssh-config.json"):
     print("cp ./quick-ssh-config.json ~/")
     os.system("cp ./quick-ssh-config.json ~/")
-    print("ln -s ~/quick-ssh-config.json /usr/local/lib")
-    os.system("ln -s ~/quick-ssh-config.json /usr/local/lib")
 else:
     print("Found existing config file, will not replace.")
-    print("Found existing config file, will not replace.")
+
+print("ln -s ~/quick-ssh-config.json /usr/local/lib")
+os.system("ln -s ~/quick-ssh-config.json /usr/local/lib")
 
 print("chmod 755 /usr/local/bin/quick-ssh")
 os.system("chmod 755 /usr/local/bin/quick-ssh")
