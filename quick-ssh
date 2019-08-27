@@ -57,17 +57,19 @@ def broker_connection(config_data, name, remote, _exit):
 parser = argparse.ArgumentParser()
 parser.add_argument(
     "name",
-    help="The name of the pi to connect to: [home, dev1, dev2]"
+    help="The name or list of names of to connect to:       Example: quick-ssh dev1,dev2,dev3"
 )
 parser.add_argument(
     '-r',
     "--remote",
+    help="Specifies to use the remote connection configuration",
     action='store_true',
     required=False
 )
 parser.add_argument(
     "-e",
     "--exit-on-close",
+    help="Will exit the terminal window when passed",
     action='store_true',
     required=False
 )
