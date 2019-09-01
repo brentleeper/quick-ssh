@@ -7,8 +7,10 @@ if os.getuid() != 0:
 
 print("Starting installation\n")
 
+print("Executing the following commands:")
+
 if not os.path.exists("/usr/local/lib/quick-ssh"):
-    print("/usr/local/lib/quick-ssh")
+    print("mkdir /usr/local/lib/quick-ssh")
     os.mkdir("/usr/local/lib/quick-ssh")
 
 print("rm /usr/local/lib/quick-ssh/quick-ssh")
