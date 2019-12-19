@@ -1,32 +1,38 @@
 {
-    "user": "pi",
-    "local":
-    {
-        "home": {
-            "host": "192.168.1.50",
-            "port": 22
-        },
-        "dev1": {
-            "host": "192.168.1.56",
-            "port": 22
-        },
-        "dev2": {
-            "host": "192.168.1.49",
-            "port": 22
-        }
-    },
-    "remote":
-    {   "home": {
-            "host": "xx.xx.xx.xx",
-            "port": 2020
-        },
-        "dev1": {
-            "host": "xx.xx.xx.xx",
-            "port": 2022
-        },
-        "dev2": {
-            "host": "xx.xx.xx.xx",
-            "port": 2200
-        }
-    }
+	"home": {
+		"local": {
+			"user": "user",
+			"host": "1.1.1.1",
+			"port": 22
+		},
+		"remote": {
+			"user": "user",
+			"host": "1.1.1.1",
+			"port": 22
+		}
+	},
+	"dev1": {
+		"local": {
+			"user": "user",
+			"host": "1.1.1.1",
+			"port": 22
+		},
+		"remote": {
+			"user": "user",
+			"host": "1.1.1.1",
+			"port": 22
+		}
+	},
+	"dev2": {
+		"local": {
+			"user": "user",
+			"host": "1.1.1.1",
+			"port": 22
+		},
+		"remote": {
+			"user": "user",
+			"host": "1.1.1.1",
+			"port": 22
+		}
+	}
 }
