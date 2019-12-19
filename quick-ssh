@@ -17,23 +17,23 @@ def do_exit(_exit, close_delay=2):
 
 def broker_connection(config_data, name, remote, _exit):
     if remote:
-        if name not in config_data["remote"]:
+        if name not in config_data:
             print("Invalid value for name")
-            print(f"Options: {list(config_data['remote'].keys())}")
+            print(f"Options: {list(config_data.keys())}")
             do_exit(_exit, 5)
 
-        host = config_data["remote"][name]["host"]
-        port = config_data["remote"][name]["port"]
+        host = config_data[name]["remote"]["host"]
+        port = config_data[name]["remote"]["port"]
+        user = config_data[name]["remote"]["user"]
     else:
-        if name not in config_data["local"]:
+        if name not in config_data:
             print("Invalid value for name")
-            print(f"Options: {list(config_data['local'].keys())}")
+            print(f"Options: {list(config_data.keys())}")
             do_exit(_exit, 5)
 
-        host = config_data["local"][name]["host"]
-        port = config_data["local"][name]["port"]
-
-    user = config_data["user"]
+        host = config_data[name]["local"]["host"]
+        port = config_data[name]["local"]["port"]
+        user = config_data[name]["local"]["user"]
 
     cmd = f"ssh -o ConnectTimeout=5 {user}@{host} -p {port}"
 
