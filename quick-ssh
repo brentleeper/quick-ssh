@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import json
+import sys
 import os
 import signal
 import argparse
@@ -14,6 +15,31 @@ def do_exit(_exit, close_delay=2):
         os.kill(os.getppid(), signal.SIGHUP)
     else:
         exit()
+
+def ssh_copy_id(config_data, name, remote, _exit):
+    if remote:
+        if name not in config_data:
+            print("Invalid value for name")
+            print(f"Options: {list(config_data.keys())}")
+            do_exit(_exit, 5)
+
+        host = config_data[name]["remote"]["host"]
+        port = config_data[name]["remote"]["port"]
+        user = config_data[name]["remote"]["user"]
+    else:
+        if name not in config_data:
+            print("Invalid value for name")
+            print(f"Options: {list(config_data.keys())}")
+            do_exit(_exit, 5)
+
+        host = config_data[name]["local"]["host"]
+        port = config_data[name]["local"]["port"]
+        user = config_data[name]["local"]["user"]
+
+    cmd = f"ssh-copy-id {user}@{host} -p {port}"
+    os.system(cmd)
+    broker_connection(config_data, name, remote, _exit)
+
 
 def broker_connection(config_data, name, remote, _exit):
     if remote:
@@ -56,8 +82,10 @@ def broker_connection(config_data, name, remote, _exit):
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "name",
-    help="The name or list of names of to connect to:       Example: quick-ssh dev1,dev2,dev3"
+    "-n",
+    "--name",
+    help="The name or list of names of to connect to:       Example: quick-ssh dev1,dev2,dev3",
+    required="--config" not in sys.argv and "-c" not in sys.argv
 )
 parser.add_argument(
     '-r',
@@ -73,13 +101,35 @@ parser.add_argument(
     action='store_true',
     required=False
 )
+parser.add_argument(
+    "-c",
+    "--config",
+    help="Open the quick-ssh config file",
+    action='store_true',
+    required=False
+)
+parser.add_argument(
+    "-i",
+    "--copy_id",
+    help="copy ssh key to each named connection",
+    action='store_true',
+    required=False
+)
 
 args = parser.parse_args()
 
 remote = args.remote
 exit_on_close = args.exit_on_close
+open_config = args.config
+copy_id = args.copy_id
 
-with open("/usr/local/lib/quick-ssh-config.json") as config_file:
+config_file_path = "/usr/local/lib/quick-ssh-config.json"
+
+if open_config:
+    os.system(f"open {config_file_path}")
+    exit()
+
+with open(config_file_path) as config_file:
     raw_data = config_file.read()
     config_data = json.loads(raw_data)
     name = str(args.name).split(",")
@@ -94,8 +144,17 @@ with open("/usr/local/lib/quick-ssh-config.json") as config_file:
         first_name = name.pop()
 
         for n in name:
-            os.popen(f"osascript -e 'tell app \"Terminal\" to do script \"quick-ssh {n}{remote_mod} -e\"'")
+            if copy_id:
+                os.popen(f"osascript -e 'tell app \"Terminal\" to do script \"quick-ssh -n {n}{remote_mod} -i -e\"'")
+            else:
+                os.popen(f"osascript -e 'tell app \"Terminal\" to do script \"quick-ssh -n {n}{remote_mod} -e\"'")
 
-        broker_connection(config_data, first_name, remote_mod, exit_on_close)
+        if copy_id:
+            ssh_copy_id(config_data, first_name, remote_mod, exit_on_close)
+        else:
+            broker_connection(config_data, first_name, remote_mod, exit_on_close)
     else:
-        broker_connection(config_data, name[0], remote, exit_on_close)
+        if copy_id:
+            ssh_copy_id(config_data, name[0], "", exit_on_close)
+        else:
+            broker_connection(config_data, name[0], "", exit_on_close)
