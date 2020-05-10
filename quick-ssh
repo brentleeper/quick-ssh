@@ -134,6 +134,9 @@ with open(config_file_path) as config_file:
     config_data = json.loads(raw_data)
     name = str(args.name).split(",")
 
+    if "all" in name:
+        name = list(config_data.keys())
+
     if len(name) > 1:
         remote_mod = ""
         if remote:
