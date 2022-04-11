@@ -36,7 +36,7 @@ def ssh_copy_id(config_data, name, remote, _exit):
         port = config_data[name]["local"]["port"]
         user = config_data[name]["local"]["user"]
 
-    cmd = f"ssh-copy-id {user}@{host} -p {port}"
+    cmd = f"ssh-copy-id -p {port} {user}@{host}"
     os.system(cmd)
     broker_connection(config_data, name, remote, _exit)
 
